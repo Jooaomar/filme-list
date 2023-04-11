@@ -14,16 +14,22 @@ import {
     NumberInputField,
     NumberInputStepper,
     NumberIncrementStepper,
-    NumberDecrementStepper
+    NumberDecrementStepper,
+    VStack,
+    Box
   } from '@chakra-ui/react'
 
 import Link from 'next/link'
 import React from 'react'
 import { useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
+import { useState } from 'react';
+
+
 
 
 export default function ButaoAdicionar() {
+    const [items, setItems] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure()
   
     const initialRef = React.useRef(null)
@@ -43,13 +49,42 @@ export default function ButaoAdicionar() {
             situacao: situacao,
             prioridade: prioridade
         };
-        await axios.post('http://0.0.0.0:8000/adicionar/', data);
+        await axios.post('http://0.0.0.0:8080/adicionar/', data);
         onClose();
-      };
+
+        // Atualiza a lista de itens com os novos dados submetidos
+        const response = await axios.get('http://0.0.0.0:8080/filmes');
+        setItems(response.data);
+    };
+
+    const handleListItems = async () => {
+        const response = await axios.get('http://0.0.0.0:8080/filmes');
+        setItems(response.data);
+    };
   
     return (
         <>
-            <Button onClick={onOpen}>Open Modal</Button>
+            <Button onClick={handleListItems}>Listar Itens</Button>
+
+            <VStack
+                spacing={2}
+                align='stretch'
+                marginLeft='2'
+                marginRight='2'
+            >
+                {items.map((item) => {
+                    const parsedItem = JSON.parse(item); // Parse o JSON para objeto JavaScript
+                    return (
+                        <Box key={parsedItem.id} h='40px' bg='yellow.200'>
+                            <p>{parsedItem.descricao}</p>
+                            <p>{parsedItem.responsavel}</p>
+                        </Box>
+                    );
+                })}
+            </VStack>
+
+
+            <Button onClick={onOpen}>Adicionar</Button>
             <Modal
                 initialFocusRef={initialRef}
                 finalFocusRef={finalRef}
@@ -71,12 +106,7 @@ export default function ButaoAdicionar() {
                             <Input id='descricao' placeholder='Descrição' />
                         </FormControl>
 
-                        {/* <FormControl mt={4}>
-                            <FormLabel>Nível</FormLabel>
-                            <Input id='descricao' placeholder='Descrição' />
-                        </FormControl> */}
                         <FormControl mt={4}>
-
                             <FormLabel>Nível</FormLabel>
                             <NumberInput id='nivel' defaultValue={1} min={1} max={5}>
                                 <NumberInputField />
@@ -93,7 +123,6 @@ export default function ButaoAdicionar() {
                         </FormControl>
 
                         <FormControl mt={4}>
-
                             <FormLabel>Prioridade</FormLabel>
                             <NumberInput id='prioridade' defaultValue={1} min={1} max={3}>
                                 <NumberInputField />
@@ -103,6 +132,7 @@ export default function ButaoAdicionar() {
                                 </NumberInputStepper>
                             </NumberInput>
                         </FormControl>
+
                     </ModalBody>
 
                     <ModalFooter>
