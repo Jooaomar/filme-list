@@ -24,13 +24,17 @@ import React from 'react'
 import { useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react';
-
+import { useEffect } from 'react'
 
 
 
 export default function ButaoAdicionar() {
     const [items, setItems] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    useEffect(() => {
+        handleListItems();
+    }, []); // chama a função apenas na primeira renderização
   
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
@@ -64,8 +68,6 @@ export default function ButaoAdicionar() {
   
     return (
         <>
-            <Button onClick={handleListItems}>Listar Itens</Button>
-
             <VStack
                 spacing={2}
                 align='stretch'
