@@ -25,6 +25,8 @@ import { useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react';
 import { useEffect } from 'react'
+import styles from "../index.module.css";
+
 
 
 
@@ -68,25 +70,13 @@ export default function ButaoAdicionar() {
   
     return (
         <>
-            <VStack
-                spacing={2}
-                align='stretch'
-                marginLeft='2'
-                marginRight='2'
+            <Button onClick={onOpen}
+                variant="ghost"
+                w="66px"
+                colorScheme="teal"
             >
-                {items.map((item) => {
-                    const parsedItem = JSON.parse(item); // Parse o JSON para objeto JavaScript
-                    return (
-                        <Box key={parsedItem.id} h='40px' bg='yellow.200'>
-                            <p>{parsedItem.descricao}</p>
-                            <p>{parsedItem.responsavel}</p>
-                        </Box>
-                    );
-                })}
-            </VStack>
-
-
-            <Button onClick={onOpen}>Adicionar</Button>
+                Add
+            </Button>
             <Modal
                 initialFocusRef={initialRef}
                 finalFocusRef={finalRef}
@@ -145,6 +135,21 @@ export default function ButaoAdicionar() {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            <VStack
+                spacing={2}
+                align='stretch'
+                marginLeft='2'
+                marginRight='2'
+            >
+                {items.map((item) => {
+                    const parsedItem = JSON.parse(item); // Parse o JSON para objeto JavaScript
+                    return (
+                        <Box key={parsedItem.id} h='40px' bg='yellow.200'>
+                            <p>{parsedItem.descricao}</p>
+                        </Box>
+                    );
+                })}
+            </VStack>
         </>
     );
   }
